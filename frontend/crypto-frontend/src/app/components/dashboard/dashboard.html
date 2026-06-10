@@ -1,1 +1,60 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1>Crypto App</h1>
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <!-- Encrypt section -->
+  <main class="main-content">
+    <div class="encrypt-card">
+      <h2>Encrypt a Message</h2>
+      <p class="subtitle">Type your message and encrypt it securely with AES-256</p>
+
+      <div class="form-group">
+        <textarea
+          [(ngModel)]="inputText"
+          name="inputText"
+          placeholder="Enter message to encrypt..."
+          rows="4"
+        ></textarea>
+      </div>
+
+      <!-- Success/error messages -->
+      <div class="success" *ngIf="successMessage">{{ successMessage }}</div>
+      <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <button class="btn-primary" (click)="encrypt()">Encrypt & Save</button>
+    </div>
+
+    <!-- Messages list -->
+    <div class="messages-section">
+      <h2>Your Encrypted Messages</h2>
+
+      <div *ngIf="messages.length === 0" class="empty-state">
+        No messages yet. Encrypt your first message above.
+      </div>
+
+      <div class="message-card" *ngFor="let message of messages">
+        <div class="message-header">
+          <span class="message-id">#{{ message.id }}</span>
+          <span class="message-date">{{ message.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+
+        <div class="message-content">
+          <p class="encrypted-text">{{ message.encryptedContent }}</p>
+        </div>
+
+        <div class="message-footer">
+          <button class="btn-decrypt" (click)="decrypt(message.id)">Decrypt</button>
+          <div class="decrypted-text" *ngIf="decryptedTexts[message.id]">
+            <strong>Decrypted:</strong> {{ decryptedTexts[message.id] }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

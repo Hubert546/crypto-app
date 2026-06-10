@@ -53,7 +53,7 @@ export class Login {
         alert('Registration successful! Please log in.');
       },
       error: (err) => {
-        this.errorMessage = err.error || 'Registration failed';
+        this.errorMessage = err.error?.message ?? err.error ?? 'Registration failed';
       }
     });
   }
