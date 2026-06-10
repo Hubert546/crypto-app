@@ -1,6 +1,7 @@
 package com.crypto.backend.controller;
 
 import com.crypto.backend.model.Message;
+import com.crypto.backend.service.EncryptionService;
 import com.crypto.backend.service.JwtService;
 import com.crypto.backend.service.MessageService;
 import jakarta.validation.Valid;
@@ -20,8 +21,8 @@ public class MessageController {
 
     private final MessageService messageService;
     private final JwtService jwtService;
+    private final EncryptionService encryptionService;
 
-    // Encrypt a message and save it to database
     @PostMapping("/encrypt")
     public ResponseEntity<?> encrypt(
             @RequestHeader("Authorization") String authHeader,
@@ -40,7 +41,6 @@ public class MessageController {
         }
     }
 
-    // Decrypt a specific message by ID
     @GetMapping("/decrypt/{id}")
     public ResponseEntity<?> decrypt(
             @RequestHeader("Authorization") String authHeader,
@@ -54,7 +54,6 @@ public class MessageController {
         }
     }
 
-    // Get all messages for the logged-in user
     @GetMapping
     public ResponseEntity<?> getMessages(
             @RequestHeader("Authorization") String authHeader) {
@@ -67,7 +66,20 @@ public class MessageController {
         }
     }
 
-    // Extract username from JWT token in Authorization header
+    // Decrypt any encrypted text directly without database lookup
+    @PostMapping("/decrypt-text")
+    public ResponseEntity<?> decryptText(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody DecryptTextRequest request) {
+        try {
+            getUsernameFromToken(authHeader);
+            String decrypted = encryptionService.decrypt(request.getEncryptedText());
+            return ResponseEntity.ok(decrypted);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Decryption failed: invalid encrypted text");
+        }
+    }
+
     private String getUsernameFromToken(String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new RuntimeException("Invalid authorization header");
@@ -92,5 +104,10 @@ public class MessageController {
         private final String encryptedContent;
         private final String owner;
         private final String createdAt;
+    }
+
+    @Data
+    static class DecryptTextRequest {
+        private String encryptedText;
     }
 }

@@ -40,4 +40,10 @@ export class CryptoService {
       { headers: this.getHeaders() }
     );
   }
+  decryptText(encryptedText: string): Observable<any> {
+  return this.http.post(`${this.apiUrl}/decrypt-text`,
+    { encryptedText },
+    { headers: this.getHeaders(), responseType: 'text' }
+  );
+}
 }

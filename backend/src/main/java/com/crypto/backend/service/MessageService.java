@@ -35,8 +35,8 @@ public class MessageService {
         return encryptionService.decrypt(message.getEncryptedContent());
     }
 
-    // Get all messages for a specific user
+    // Get all messages for a specific user, newest first
     public List<Message> getUserMessages(String username) {
-        return messageRepository.findByOwner(username);
+        return messageRepository.findByOwnerOrderByCreatedAtDesc(username);
     }
 }

@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
-    // Get all messages belonging to a specific user
-    List<Message> findByOwner(String owner);
+    // Get all messages belonging to a specific user, newest first
+    List<Message> findByOwnerOrderByCreatedAtDesc(String owner);
 }

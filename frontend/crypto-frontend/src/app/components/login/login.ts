@@ -15,14 +15,24 @@ export class Login {
   username = '';
   password = '';
   errorMessage = '';
+  successMessage = '';
   isRegisterMode = false;
+  isDark = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  // Switch between login and register mode
+  toggleTheme(): void {
+    this.isDark = !this.isDark;
+    document.documentElement.setAttribute(
+      'data-theme',
+      this.isDark ? 'dark' : 'light'
+    );
+  }
+
   toggleMode(): void {
     this.isRegisterMode = !this.isRegisterMode;
     this.errorMessage = '';
+    this.successMessage = '';
   }
 
   onSubmit(): void {
@@ -48,12 +58,16 @@ export class Login {
   private register(): void {
     this.authService.register(this.username, this.password).subscribe({
       next: () => {
-        this.isRegisterMode = false;
+        // Stay in register mode to show success message
         this.errorMessage = '';
-        alert('Registration successful! Please log in.');
+        this.successMessage = 'Account created! You can now sign in.';
+        this.username = '';
+        this.password = '';
       },
       error: (err) => {
-        this.errorMessage = err.error?.message ?? err.error ?? 'Registration failed';
+        this.errorMessage = typeof err.error === 'string'
+          ? err.error
+          : 'Registration failed';
       }
     });
   }

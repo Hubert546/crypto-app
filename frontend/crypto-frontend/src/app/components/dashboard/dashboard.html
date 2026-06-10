@@ -3,13 +3,23 @@
   <!-- Header -->
   <header class="header">
     <div class="header-content">
-      <h1>Crypto App</h1>
-      <button class="btn-logout" (click)="logout()">Logout</button>
+      <div class="logo">
+        <div class="logo-dot"></div>
+        <h1>Crypto App</h1>
+      </div>
+      <div class="header-actions">
+        <button class="btn-theme" (click)="toggleTheme()">
+          {{ isDark ? '☀️' : '🌙' }}
+        </button>
+        <button class="btn-logout" (click)="logout()">Log out</button>
+      </div>
     </div>
   </header>
 
-  <!-- Encrypt section -->
+  <!-- Main -->
   <main class="main-content">
+
+    <!-- Encrypt section -->
     <div class="encrypt-card">
       <h2>Encrypt a Message</h2>
       <p class="subtitle">Type your message and encrypt it securely with AES-256</p>
@@ -23,16 +33,41 @@
         ></textarea>
       </div>
 
-      <!-- Success/error messages -->
       <div class="success" *ngIf="successMessage">{{ successMessage }}</div>
       <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
       <button class="btn-primary" (click)="encrypt()">Encrypt & Save</button>
     </div>
 
+    <!-- Decrypt text section -->
+    <div class="encrypt-card">
+      <h2>Decrypt a Message</h2>
+      <p class="subtitle">Paste encrypted text to decrypt it directly</p>
+
+      <div class="form-group">
+        <textarea
+          [(ngModel)]="decryptInput"
+          name="decryptInput"
+          placeholder="Paste encrypted text here..."
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="error" *ngIf="decryptErrorMessage">{{ decryptErrorMessage }}</div>
+
+      <div class="decrypted-result" *ngIf="decryptResult">
+        <strong>Decrypted:</strong> {{ decryptResult }}
+      </div>
+
+      <button class="btn-secondary" (click)="decryptManual()">Decrypt Text</button>
+    </div>
+
     <!-- Messages list -->
     <div class="messages-section">
       <h2>Your Encrypted Messages</h2>
+
+      <!-- Copy to clipboard notification -->
+      <div class="success" *ngIf="copyMessage">{{ copyMessage }}</div>
 
       <div *ngIf="messages.length === 0" class="empty-state">
         No messages yet. Encrypt your first message above.
@@ -43,18 +78,17 @@
           <span class="message-id">#{{ message.id }}</span>
           <span class="message-date">{{ message.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
         </div>
-
-        <div class="message-content">
-          <p class="encrypted-text">{{ message.encryptedContent }}</p>
-        </div>
-
+        <p class="encrypted-text" (click)="copyToClipboard(message.encryptedContent)" title="Click to copy">
+          {{ message.encryptedContent }}
+        </p>
         <div class="message-footer">
           <button class="btn-decrypt" (click)="decrypt(message.id)">Decrypt</button>
           <div class="decrypted-text" *ngIf="decryptedTexts[message.id]">
-            <strong>Decrypted:</strong> {{ decryptedTexts[message.id] }}
+            {{ decryptedTexts[message.id] }}
           </div>
         </div>
       </div>
     </div>
+
   </main>
 </div>

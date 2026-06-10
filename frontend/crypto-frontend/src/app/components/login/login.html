@@ -1,10 +1,20 @@
+<!-- Dark/Light mode toggle -->
+<button class="theme-toggle" (click)="toggleTheme()">
+  {{ isDark ? '☀️' : '🌙' }}
+</button>
+
 <div class="login-container">
   <div class="login-card">
-    <h1>{{ isRegisterMode ? 'Register' : 'Login' }}</h1>
-    <p class="subtitle">Secure Message Encryption App</p>
+
+    <div class="logo">
+      <div class="logo-dot"></div>
+      <span>Crypto App</span>
+    </div>
+
+    <h1>{{ isRegisterMode ? 'Create account' : 'Welcome back' }}</h1>
+    <p class="subtitle">{{ isRegisterMode ? 'Sign up to get started' : 'Sign in to your account' }}</p>
 
     <form (ngSubmit)="onSubmit()">
-
       <div class="form-group">
         <label for="username">Username</label>
         <input
@@ -31,21 +41,18 @@
         />
       </div>
 
-      <!-- Error message display -->
-      <div class="error" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
+      <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="success" *ngIf="successMessage">{{ successMessage }}</div>
 
       <button type="submit" class="btn-primary">
-        {{ isRegisterMode ? 'Register' : 'Login' }}
+        {{ isRegisterMode ? 'Create account' : 'Sign in' }}
       </button>
-
     </form>
 
     <p class="toggle-text">
       {{ isRegisterMode ? 'Already have an account?' : "Don't have an account?" }}
       <span (click)="toggleMode()">
-        {{ isRegisterMode ? 'Login' : 'Register' }}
+        {{ isRegisterMode ? 'Sign in' : 'Sign up' }}
       </span>
     </p>
 

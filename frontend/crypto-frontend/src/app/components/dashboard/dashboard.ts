@@ -14,10 +14,15 @@ import { AuthService } from '../../services/auth';
 export class Dashboard implements OnInit {
 
   inputText = '';
+  isDark = false;
   messages: any[] = [];
   decryptedTexts: { [key: number]: string } = {};
   errorMessage = '';
   successMessage = '';
+  decryptInput = '';
+  decryptResult = '';
+  decryptErrorMessage = '';
+  copyMessage = '';
 
   constructor(
     private cryptoService: CryptoService,
@@ -26,7 +31,6 @@ export class Dashboard implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Redirect to login if not logged in
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
       return;
@@ -34,14 +38,21 @@ export class Dashboard implements OnInit {
     this.loadMessages();
   }
 
+  toggleTheme(): void {
+    this.isDark = !this.isDark;
+    document.documentElement.setAttribute(
+      'data-theme',
+      this.isDark ? 'dark' : 'light'
+    );
+  }
+
   encrypt(): void {
     if (!this.inputText.trim()) {
       this.errorMessage = 'Please enter a message to encrypt';
       return;
     }
-
     this.cryptoService.encrypt(this.inputText).subscribe({
-      next: (response) => {
+      next: () => {
         this.successMessage = 'Message encrypted successfully!';
         this.errorMessage = '';
         this.inputText = '';
@@ -62,6 +73,30 @@ export class Dashboard implements OnInit {
       error: () => {
         this.errorMessage = 'Decryption failed.';
       }
+    });
+  }
+
+  decryptManual(): void {
+    if (!this.decryptInput.trim()) {
+      this.decryptErrorMessage = 'Please enter encrypted text to decrypt';
+      return;
+    }
+    this.cryptoService.decryptText(this.decryptInput).subscribe({
+      next: (response) => {
+        this.decryptResult = response;
+        this.decryptErrorMessage = '';
+      },
+      error: () => {
+        this.decryptErrorMessage = 'Decryption failed. Invalid encrypted text.';
+        this.decryptResult = '';
+      }
+    });
+  }
+
+  copyToClipboard(text: string): void {
+    navigator.clipboard.writeText(text).then(() => {
+      this.copyMessage = 'Copied to clipboard!';
+      setTimeout(() => this.copyMessage = '', 2000);
     });
   }
 
