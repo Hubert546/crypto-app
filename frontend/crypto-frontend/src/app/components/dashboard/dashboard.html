@@ -73,9 +73,9 @@
         No messages yet. Encrypt your first message above.
       </div>
 
-      <div class="message-card" *ngFor="let message of messages">
+      <div class="message-card" *ngFor="let message of messages; let i = index">
         <div class="message-header">
-          <span class="message-id">#{{ message.id }}</span>
+          <span class="message-id">#{{ i + 1 }}</span>
           <span class="message-date">{{ message.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
         </div>
         <p class="encrypted-text" (click)="copyToClipboard(message.encryptedContent)" title="Click to copy">
