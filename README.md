@@ -27,11 +27,16 @@ A full-stack web application for encrypting and decrypting messages securely, bu
 - **Accessibility (A11y)**: Built with semantic HTML and `<label>` elements for all form inputs, ensuring compatibility with screen readers.
 - **Responsive Design**: Fully responsive interface for mobile, tablet, and desktop, with Dark / Light mode toggle.
 
+## Screenshots
+
+![Login](screenshots/login.png)
+![Dashboard](screenshots/dashboard.png)
+
 ## Project Structure
 
 crypto-app/
-├── backend/               # Spring Boot REST API
-└── frontend/crypto-frontend/   # Angular application
+|── backend/               # Spring Boot REST API
+|── frontend/crypto-frontend/   # Angular application
 
 ## Prerequisites
 
